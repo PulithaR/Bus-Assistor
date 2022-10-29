@@ -18,6 +18,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class routestart extends AppCompatActivity {
 
     private EditText txtto, txtfrom, amount;
@@ -56,7 +59,7 @@ public class routestart extends AppCompatActivity {
         btnshow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DatabaseReference readRef = FirebaseDatabase.getInstance().getReference().child("routes").child("rot1");
+                DatabaseReference readRef = FirebaseDatabase.getInstance().getReference().child("routes").child("routeID");
                 readRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -66,7 +69,7 @@ public class routestart extends AppCompatActivity {
                             amount.setText(snapshot.child("fare").getValue().toString());
                         }
                         else
-                            Toast.makeText(getApplicationContext(),"Nothing to Display",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(),"No data to be displayed",Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -84,14 +87,14 @@ public class routestart extends AppCompatActivity {
                 delRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if(snapshot.hasChild("rot1")){
-                            dbRef = FirebaseDatabase.getInstance().getReference().child("routes").child("rot1");
+                        if(snapshot.hasChild("routeID")){
+                            dbRef = FirebaseDatabase.getInstance().getReference().child("routes").child("routeID");
                             dbRef.removeValue();
                             clearControls();
-                            Toast.makeText(getApplicationContext(),"Data deleted sucessfully",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(),"Data deletion successful",Toast.LENGTH_SHORT).show();
                         }
                         else
-                            Toast.makeText(getApplicationContext(),"No source to delete",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(),"No data in the database",Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -109,24 +112,24 @@ public class routestart extends AppCompatActivity {
                 udRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if(snapshot.hasChild("rot1")){
+                        if(snapshot.hasChild("routeID")){
                             try{
                                 rout.setRouteto(txtto.getText().toString().trim());
                                 rout.setRoutefrom(txtfrom.getText().toString().trim());
                                 rout.setFare(amount.getText().toString().trim());
 
-                                dbRef = FirebaseDatabase.getInstance().getReference().child("routes").child("rot1");
+                                dbRef = FirebaseDatabase.getInstance().getReference().child("routes").child("routeID");
                                 dbRef.setValue(rout);
                                 clearControls();
 
                                 Toast.makeText(getApplicationContext(),"Data updated successfully",Toast.LENGTH_SHORT).show();
                             }
                             catch(NumberFormatException e){
-                                Toast.makeText(getApplicationContext(),"Invalid contact no",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(),"Invalid email address",Toast.LENGTH_SHORT).show();
                             }
                         }
                         else
-                            Toast.makeText(getApplicationContext(),"No data to upload",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(),"No data to be upload",Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -161,7 +164,7 @@ public class routestart extends AppCompatActivity {
                     }
                 }
                 catch(NumberFormatException e){
-                    Toast.makeText(getApplicationContext(),"Invalid contact Number",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"Invalid mail account. Please enter a valid one",Toast.LENGTH_SHORT).show();
                 }
             }
         });
